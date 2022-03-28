@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import authRouter from "../auth/index";
+import createUrl from "..//modules/url/createUrl/createUrlController";
 const router = Router();
 
-router.use("/", authRouter);
+router.use("/", createUrl);
 
 export default router;
