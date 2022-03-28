@@ -1,2 +1,2 @@
 # URL-Shortener
-API Rest para encurtar e redirecionar URL's
+API para encurtar e redirecionar URL's
