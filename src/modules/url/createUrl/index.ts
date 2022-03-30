@@ -9,8 +9,12 @@ const createUrlController = new CreateUrlController(createUrlService);
 
 const UrlRouter = Router();
 
-UrlRouter.post("/createUrl", (req, res) =>
-  createUrlController.create(req, res)
+// UrlRouter.post("/createUrl", (req, res) =>
+//   createUrlController.create(req, res)
+// );
+
+UrlRouter.post("/createShortUrl", (req, res) =>
+  createUrlController.createShortUrl(req, res)
 );
 
 export { UrlRouter };

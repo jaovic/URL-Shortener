@@ -8,5 +8,12 @@ class CreateUrlRepositoy {
       },
     });
   }
+  async saveShortUrl(shortUrl: any) {
+    await prisma.shortUrl.create({
+      data: {
+        shortUrl: shortUrl,
+      },
+    });
+  }
 }
 export { CreateUrlRepositoy };
