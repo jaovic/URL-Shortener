@@ -1,9 +1,10 @@
-import { url } from '@prisma/client';
-
-export interface IcreateUserService {
+export interface ICreateUrl {
   url: string;
 }
 
+export interface ICreateUrlServiceReturn {
+  URL: String;
+}
 export interface ICreateUrlrService {
-  execute(data: IcreateUserService): Promise<url>;
+  execute(data: ICreateUrl): Promise<ICreateUrlServiceReturn>;
 }
