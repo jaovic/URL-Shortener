@@ -8,10 +8,11 @@ datasource db {
 }
 
 model url {
-  id          String        @id @default(uuid())
-  url     shortener[]
+  id                    String        @id @default(uuid())
+  url                   String
   created_at            DateTime   @default(now()) @db.Timestamptz()
   updated_at            DateTime   @default(now()) @updatedAt @db.Timestamptz()
+  shortener             shortener[]
 }
 
 model shortener {
