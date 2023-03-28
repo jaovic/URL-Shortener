@@ -18,7 +18,8 @@ model url {
 model shortener {
   id                    String     @id @default(uuid())
   url_id                String    @db.VarChar(255)
-  url_shortener         url     @relation(fields: [url_id], references: [id], onDelete: Cascade)
+  url        url     @relation(fields: [url_id], references: [id], onDelete: Cascade)
+  code                  String
   created_at            DateTime   @default(now()) @db.Timestamptz()
   updated_at            DateTime   @default(now()) @updatedAt @db.Timestamptz()
 }
