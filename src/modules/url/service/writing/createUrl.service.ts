@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { url } from '@prisma/client';
-import { getClassError } from 'src/utils/errors/custom.error';
+import { ShortenerRepository } from '../../../shortener/repository/shortener.repository';
+import { IShortenerRepository } from '../../../shortener/structure/IRepository.structure';
+import { getClassError } from '../../../../utils/errors/custom.error';
 import { UrlRepository } from '../../repository/url.repository';
 import { UrlErrorsCodes } from '../../structure/erros.codes.structure';
 import { IUrlRepository } from '../../structure/IRepository.structure';
-import { ICreateUrlrService, IcreateUserService } from '../../structure/IService.structure';
+import { ICreateUrlrService, ICreateUrlServiceReturn, ICreateUrl } from '../../structure/IService.structure';
 
 @Injectable()
 export class CreateUrlService implements ICreateUrlrService {
@@ -16,20 +17,26 @@ export class CreateUrlService implements ICreateUrlrService {
   constructor(
     @Inject(UrlRepository)
     private readonly urlRepository: IUrlRepository,
+    @Inject(ShortenerRepository)
+    private readonly shortenerRepository: IShortenerRepository,
   ) {}
 
-  async execute(data: IcreateUserService): Promise<url> {
+  async execute(data: ICreateUrl): Promise<ICreateUrlServiceReturn> {
     const urlExist = await this.urlRepository.exists({ url: data.url });
 
     if (urlExist) throw this._error(this._urlExist, UrlErrorsCodes.CONFLICT, 403);
 
-    const result = Math.random().toString(36).substring(2, 7);
-    console.log(result);
+    const code = Math.random().toString(36).slice(2);
 
-    try {
-      return this.urlRepository.create({ url: data.url });
-    } catch (error) {
-      throw this._error(this._prismaError, UrlErrorsCodes.INTERNAL, 500);
-    }
+    const url = await this.urlRepository.create({ url: data.url });
+
+    const createShortener = await this.shortenerRepository.create({
+      url_id: url.id,
+      code,
+    });
+
+    if (!createShortener) throw this._error(this._prismaError, UrlErrorsCodes.INTERNAL, 500);
+
+    return { URL: `localhost:3000/v1/shortener/find/${code}` };
   }
 }
