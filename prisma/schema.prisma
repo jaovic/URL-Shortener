@@ -1,22 +1,23 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Url {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  url     String   @unique
-  shortUrl ShortUrl[]
+model url {
+  id          String        @id @default(uuid())
+  url     shortener[]
+  created_at            DateTime   @default(now()) @db.Timestamptz()
+  updated_at            DateTime   @default(now()) @updatedAt @db.Timestamptz()
 }
 
-model ShortUrl {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  urlID Url @relation(fields: [shorUtl], references: [id])
-  shorUtl String @db.ObjectId
+model shortener {
+  id                    String     @id @default(uuid())
+  url_id                String    @db.VarChar(255)
+  url_shortener         url     @relation(fields: [url_id], references: [id], onDelete: Cascade)
+  created_at            DateTime   @default(now()) @db.Timestamptz()
+  updated_at            DateTime   @default(now()) @updatedAt @db.Timestamptz()
 }
-
